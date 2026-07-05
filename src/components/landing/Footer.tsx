@@ -1,116 +1,72 @@
 import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="border-t border-white/5 pt-16 pb-8 px-6">
+    <footer className="border-t hairline pt-16 pb-8 px-6">
       <div className="max-w-6xl mx-auto">
-
-        {/* CTA Banner */}
-        <div className="relative bg-linear-to-r from-[#111827] via-[#1e293b] to-[#0f172a] border border-[#3b82f6]/20 rounded-2xl p-10 mb-16 overflow-hidden text-center">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-100 h-50 bg-[#3b82f6]/10 rounded-full blur-[60px] pointer-events-none" />
+        <div className="relative panel p-10 mb-16 overflow-hidden text-center">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-100 h-50 bg-brass/[0.06] rounded-full blur-[60px] pointer-events-none" />
           <div className="relative z-10">
-            <h2 className="font-display font-bold text-3xl lg:text-4xl mb-3">
+            <h2 className="font-display font-semibold text-3xl lg:text-4xl mb-3 text-paper">
               Commencez dès aujourd'hui.<br />
-              <span className="gradient-text">C'est gratuit.</span>
+              <span className="text-gradient-brass">C'est gratuit.</span>
             </h2>
-            <p className="text-[#8899bb] text-sm mb-8 max-w-sm mx-auto">
+            <p className="text-paper-dim text-sm mb-8 max-w-sm mx-auto">
               Aucune carte bancaire requise. Créez votre compte en 2 minutes et commencez à suivre vos finances.
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
-              <Link
-                to="/register"
-                className="inline-flex items-center gap-2 bg-[#c2410c] text-white font-medium px-7 py-3.5 rounded-xl text-sm hover:bg-[#9a3412] transition-all hover:-translate-y-0.5 shadow-lg shadow-[#c2410c]/25"
-              >
+              <Link to="/register" className="inline-flex items-center gap-2 bg-brass text-ink-950 font-medium px-7 py-3.5 rounded-xl text-sm hover:bg-brass/90 transition-all hover:-translate-y-0.5">
                 Créer mon compte gratuitement
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <ArrowRight size={14} />
               </Link>
-              <Link
-                to="/login"
-                className="inline-flex items-center gap-2 border border-white/10 text-white font-medium px-7 py-3.5 rounded-xl text-sm hover:bg-white/5 transition-all"
-              >
+              <Link to="/login" className="inline-flex items-center gap-2 border hairline text-paper font-medium px-7 py-3.5 rounded-xl text-sm hover:bg-ink-850 transition-all">
                 J'ai déjà un compte
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Footer grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-          {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-linear-to-br from-[#3b82f6] to-[#2563eb] flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 12L6 8L9 10L13 5" stroke="#0b1120" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <circle cx="13" cy="5" r="1.5" fill="#0b1120"/>
-                </svg>
-              </div>
-              <span className="font-display font-800 text-[1.1rem]">
-                Finance<span className="text-[#3b82f6]">Flow</span>
-              </span>
+            <Link to="/" className="inline-block font-display font-semibold text-lg mb-4 text-paper">
+              Finance<span className="text-gradient-brass">Flow</span>
             </Link>
-            <p className="text-xs text-[#8899bb] leading-relaxed">
+            <p className="text-xs text-paper-dim leading-relaxed">
               La plateforme de gestion des finances personnelles pensée pour l'Afrique de l'Ouest.
             </p>
           </div>
 
-          {/* Produit */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#4a5568] mb-4">Produit</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-paper-faint mb-4">Produit</p>
             <ul className="space-y-2.5">
-              {["Fonctionnalités", "Tarifs", "Sécurité", "Mises à jour"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-[#8899bb] hover:text-white transition-colors">
-                    {item}
-                  </a>
-                </li>
+              {["Fonctionnalités", "Comment ça marche", "Sécurité"].map((item) => (
+                <li key={item}><a href="#" className="text-sm text-paper-dim hover:text-paper transition-colors">{item}</a></li>
               ))}
             </ul>
           </div>
 
-          {/* Ressources */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#4a5568] mb-4">Ressources</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-paper-faint mb-4">Ressources</p>
             <ul className="space-y-2.5">
-              {["Documentation", "Blog finance", "Guides", "Support"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-[#8899bb] hover:text-white transition-colors">
-                    {item}
-                  </a>
-                </li>
+              {["Documentation", "Support"].map((item) => (
+                <li key={item}><a href="#" className="text-sm text-paper-dim hover:text-paper transition-colors">{item}</a></li>
               ))}
             </ul>
           </div>
 
-          {/* Légal */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-[#4a5568] mb-4">Légal</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-paper-faint mb-4">Légal</p>
             <ul className="space-y-2.5">
-              {["Politique de confidentialité", "Conditions d'utilisation", "Cookies"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-[#8899bb] hover:text-white transition-colors">
-                    {item}
-                  </a>
-                </li>
+              {["Politique de confidentialité", "Conditions d'utilisation"].map((item) => (
+                <li key={item}><a href="#" className="text-sm text-paper-dim hover:text-paper transition-colors">{item}</a></li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-[#4a5568]">
-            © 2026 FinanceFlow. Tous droits réservés.
-          </p>
-          <div className="flex items-center gap-4">
-            {["Twitter", "LinkedIn", "GitHub"].map((social) => (
-              <a key={social} href="#" className="text-xs text-[#4a5568] hover:text-[#8899bb] transition-colors">
-                {social}
-              </a>
-            ))}
-          </div>
+        <div className="border-t hairline pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-xs text-paper-faint">© 2026 FinanceFlow. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

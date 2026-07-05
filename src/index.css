@@ -1,180 +1,183 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
+/*
+  ------------------------------------------------------------------
+  Système de design "Ledger" — FinanceFlow
+  ------------------------------------------------------------------
+  Palette et typographies définies une seule fois ici via @theme
+  (Tailwind v4, CSS-first). Toute couleur ou police ajoutée ici
+  génère automatiquement les utilitaires correspondants
+  (ex: --color-ink-900 -> bg-ink-900 / text-ink-900 / border-ink-900).
+  Aucune couleur ne doit être écrite en dur ailleurs dans le code
+  (bg-[#111827] etc.) : on utilise ces tokens partout pour garder
+  une seule source de vérité.
+*/
+@theme {
+  /* Typographies */
+  --font-display: "Fraunces", serif;      /* Titres et montants clés — caractère éditorial */
+  --font-sans: "Inter", sans-serif;       /* Interface, texte courant */
+  --font-mono: "IBM Plex Mono", monospace; /* Tous les chiffres/montants — alignement type "grand livre" */
+
+  /* Fond & surfaces (bleu-encre profond, pas de noir pur) */
+  --color-ink-950: #0a0d14;   /* Fond de page */
+  --color-ink-900: #10141d;   /* Surface (cartes) */
+  --color-ink-850: #141926;   /* Surface secondaire */
+  --color-ink-800: #171c2a;   /* Survol / élévation */
+  --color-ink-border: #232a3a;
+
+  /* Texte */
+  --color-paper: #edeff3;      /* Texte principal (ivoire, pas blanc pur) */
+  --color-paper-dim: #8a93a8;  /* Texte secondaire */
+  --color-paper-faint: #5b6478; /* Texte tertiaire / placeholders */
+
+  /* Accent signature — laiton mat (valeur, monnaie) */
+  --color-brass: #c89b4a;
+  --color-brass-dim: #8a7038;
+  --color-brass-soft: #c89b4a1a;
+
+  /* Sémantique financière */
+  --color-gain: #3ecf8e;    /* revenus / positif */
+  --color-gain-soft: #3ecf8e1a;
+  --color-loss: #ff6b57;    /* dépenses / négatif */
+  --color-loss-soft: #ff6b571a;
+  --color-info: #6c8cff;    /* liens / accents secondaires */
+  --color-info-soft: #6c8cff1a;
+
+  --radius-card: 1rem;
+}
+
 @layer base {
-  :root {
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-  }
- 
   html {
     scroll-behavior: smooth;
   }
- 
+
   body {
-    font-family: var(--font-body);
-    background-color: #0b1120;
-    color: #f8fafc;
+    font-family: var(--font-sans);
+    background-color: var(--color-ink-950);
+    color: var(--color-paper);
     overflow-x: hidden;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-brass-soft);
+    color: var(--color-paper);
+  }
 }
- 
+
 @layer utilities {
   .font-display {
     font-family: var(--font-display);
   }
- 
-  .font-body {
-    font-family: var(--font-body);
+
+  .font-mono-figures {
+    font-family: var(--font-mono);
+    font-feature-settings: "tnum" 1;
   }
- 
-  .text-accent {
-    color: #3b82f6;
+
+  .text-gradient-brass {
+    background: linear-gradient(115deg, var(--color-brass) 0%, #e8c98a 45%, var(--color-brass) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
- 
-  .bg-accent {
-    background-color: #3b82f6;
+
+  .panel {
+    background: var(--color-ink-900);
+    border: 1px solid var(--color-ink-border);
+    border-radius: var(--radius-card);
   }
- 
-  .border-accent {
-    border-color: #3b82f6;
+
+  .panel-hover {
+    transition: border-color 0.2s ease, transform 0.2s ease;
   }
-}
- 
-/* Animated gradient background */
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
- 
-/* Floating animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
-}
- 
-/* Fade up animation */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
+  .panel-hover:hover {
+    border-color: #2e3648;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .hairline {
+    border-color: var(--color-ink-border);
   }
 }
- 
-/* Fade in animation */
+
+/* ------------------------------------------------------------------
+   Mouvement — discret, cohérent, désactivable
+   ------------------------------------------------------------------ */
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
- 
-/* Pulse dot */
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
 }
- 
-/* Slide in from left */
-@keyframes slideLeft {
-  from { opacity: 0; transform: translateX(-32px); }
-  to { opacity: 1; transform: translateX(0); }
+
+@keyframes shimmerBrass {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
- 
-/* Slide in from right */
-@keyframes slideRight {
-  from { opacity: 0; transform: translateX(32px); }
-  to { opacity: 1; transform: translateX(0); }
+
+@keyframes growWidth {
+  from { width: 0%; }
 }
- 
-/* Bar grow */
-@keyframes barGrow {
-  from { transform: scaleY(0); }
-  to { transform: scaleY(1); }
+
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
- 
-/* Counter animation */
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
 }
- 
-/* Shimmer */
-@keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+
+.animate-rise {
+  animation: riseIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
- 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
+.animate-fade {
+  animation: fadeIn 0.4s ease both;
 }
- 
-.animate-fade-up {
-  animation: fadeUp 0.7s ease both;
+.animate-scale-in {
+  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
- 
-.animate-fade-in {
-  animation: fadeIn 0.6s ease both;
+.animate-pulse-soft {
+  animation: pulseSoft 2s ease-in-out infinite;
 }
- 
-.animate-slide-left {
-  animation: slideLeft 0.7s ease both;
+
+.animate-float-slow {
+  animation: floatSoft 6s ease-in-out infinite;
 }
- 
-.animate-slide-right {
-  animation: slideRight 0.7s ease both;
+
+.stagger-1 { animation-delay: 0.04s; }
+.stagger-2 { animation-delay: 0.08s; }
+.stagger-3 { animation-delay: 0.12s; }
+.stagger-4 { animation-delay: 0.16s; }
+.stagger-5 { animation-delay: 0.2s; }
+.stagger-6 { animation-delay: 0.24s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
- 
-.animate-pulse-dot {
-  animation: pulseDot 1.5s ease-in-out infinite;
-}
- 
-/* Stagger delays */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-400 { animation-delay: 0.4s; }
-.delay-500 { animation-delay: 0.5s; }
-.delay-600 { animation-delay: 0.6s; }
-.delay-700 { animation-delay: 0.7s; }
-.delay-800 { animation-delay: 0.8s; }
- 
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #3b82f6 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 3s linear infinite;
-}
- 
-/* Grid background */
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(59, 130, 246, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(59, 130, 246, 0.07) 1px, transparent 1px);
-  background-size: 56px 56px;
-}
- 
-/* Glass card */
-.glass-card {
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-}
- 
-/* Bar chart animation */
-.bar-item {
-  transform-origin: bottom;
-  animation: barGrow 0.8s ease both;
-}
- 
+
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0b1120; }
-::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #475569; }
- 
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-ink-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #2e3648; }

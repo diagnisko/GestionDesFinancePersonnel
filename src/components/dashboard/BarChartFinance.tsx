@@ -1,5 +1,4 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import type { ChartCompareRow } from './LineChartFinance';
 
 interface Props {
@@ -8,26 +7,23 @@ interface Props {
 
 export default function BarChartFinance({ data }: Props) {
   const chartData = data.length > 0 ? data : [{ month: '—', revenu: 0, depense: 0 }];
-
-  const tickStyle = { fill: '#d1d5db', fontSize: 11 };
+  const tickStyle = { fill: '#8a93a8', fontSize: 11, fontFamily: 'Inter' };
 
   return (
-    <div className="bg-[#111827] border border-[#334155] p-4 rounded-xl shadow min-h-[16rem] flex flex-col text-[#f8fafc]">
-      <h2 className="font-bold mb-2 shrink-0">Comparaison</h2>
-
-      <div className="flex-1 min-h-[12rem] w-full">
+    <div className="panel p-5 min-h-[18rem] flex flex-col">
+      <h2 className="font-display text-base text-paper mb-4 shrink-0">Revenus vs dépenses</h2>
+      <div className="flex-1 min-h-[13rem] w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-            <XAxis dataKey="month" tick={tickStyle} />
-            <YAxis tick={tickStyle} tickFormatter={(v) => `${Number(v) / 1000}k`} />
+            <CartesianGrid stroke="#171c2a" vertical={false} />
+            <XAxis dataKey="month" tick={tickStyle} axisLine={{ stroke: '#232a3a' }} tickLine={false} />
+            <YAxis tick={tickStyle} tickFormatter={(v) => `${Number(v) / 1000}k`} axisLine={false} tickLine={false} />
             <Tooltip
-              contentStyle={{ color: '#f8fafc', backgroundColor: '#1e293b', border: '1px solid #334155' }}
-              formatter={(value) =>
-                typeof value === 'number' ? value.toLocaleString('fr-FR') : String(value ?? '')
-              }
+              contentStyle={{ color: '#edeff3', backgroundColor: '#141926', border: '1px solid #232a3a', borderRadius: 10, fontSize: 12 }}
+              formatter={(value) => (typeof value === 'number' ? value.toLocaleString('fr-FR') : String(value ?? ''))}
             />
-            <Bar dataKey="revenu" fill="#22C55E" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="depense" fill="#EF4444" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="revenu" name="Revenus" fill="#3ecf8e" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="depense" name="Dépenses" fill="#ff6b57" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

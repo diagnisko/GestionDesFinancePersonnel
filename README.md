@@ -1,77 +1,51 @@
-# FinanceFlow - Projet Unifie
+# FinanceFlow
 
-Application web de gestion des finances personnelles (landing page, authentification, dashboard, transactions, statistiques, profil) construite avec React + TypeScript + Vite.
+Application de gestion de finances personnelles : comptes, transactions, budgets et objectifs d'épargne.
 
-## Dossier principal
+## Architecture
 
-Le projet final unifie est dans :
+Ce dépôt contient deux projets distincts :
 
-`unified-app/`
+```
+.
+├── src/            # Frontend React 19 + Vite + TypeScript + Tailwind
+├── backend/         # Backend NestJS + TypeORM + MySQL
+└── .github/workflows/deploy-github-pages.yml   # CI/CD du frontend
+```
 
-Les autres dossiers (`landing page`, `login`, `Dashboard`, `featuredashboard logic`) sont conserves comme modules sources developpes separement.
+Le frontend et le backend sont deux applications séparées qui communiquent via une API REST (préfixe `/api`). Le frontend **ne fonctionne pas seul** : il a besoin du backend pour l'authentification et toutes les données (comptes, transactions, budgets, objectifs).
 
-## Fonctionnalites
+## Lancer le projet en local
 
-- Landing page responsive
-- Inscription / connexion / mot de passe oublie
-- Routes protegees apres connexion
-- Dashboard avec revenus, depenses, solde
-- Ajout de revenus et depenses
-- Graphiques (ligne, barre, camembert) via Recharts
-- Pages connectees : Transactions, Statistiques, Profil
-- Persistance locale via `localStorage`
-
-## Prerequis
-
-- Node.js 20+ recommande
-- npm 10+ recommande
-
-## Installation
+### 1. Backend
 
 ```bash
-cd unified-app
+cd backend
+cp .env.example .env   # renseigner DB_*, JWT_SECRET, CORS_ORIGIN
 npm install
+npm run start:dev      # http://localhost:3000/api
 ```
 
-## Lancer en developpement
+Une base MySQL est nécessaire (voir `docker-compose.yml` à la racine pour la lancer rapidement avec Docker).
+
+### 2. Frontend
 
 ```bash
-npm run dev
+cp .env.example .env   # VITE_API_URL peut rester vide en local
+npm install
+npm run dev             # http://localhost:5173
 ```
 
-Puis ouvrir : [http://localhost:5173](http://localhost:5173)
+## Déploiement en production
 
-## Build production
+Le frontend est déployé sur GitHub Pages via `.github/workflows/deploy-github-pages.yml`.
 
-```bash
-npm run build
-```
+**Important** : ce workflow a besoin de la variable de dépôt `VITE_API_URL` (Settings → Secrets and variables → Actions → Variables) pointant vers l'URL publique de votre backend déployé (Render, Railway, VPS…). Sans elle, le build échoue volontairement plutôt que de déployer un site qui ne pourrait pas contacter l'API.
 
-## Preview du build
+Le backend n'est pas déployé automatiquement par ce dépôt : il doit être hébergé séparément (voir `backend/Dockerfile`).
 
-```bash
-npm run preview
-```
+## Sécurité
 
-## Scripts disponibles
-
-- `npm run dev` : demarre le serveur Vite
-- `npm run build` : verifie TypeScript puis build la version production
-- `npm run preview` : previsualise le build localement
-- `npm run lint` : lance ESLint
-
-## Structure rapide
-
-```text
-projet gestion des finance - Copie/
-├─ unified-app/              # application finale unifiee
-├─ Dashboard/                # ancien module dashboard
-├─ featuredashboard logic/   # ancien module logique dashboard
-├─ landing page/             # ancien module landing/auth
-└─ login/                    # ancien module login
-```
-
-## Notes
-
-- Les donnees de l'utilisateur et des finances sont stockees dans le navigateur (`localStorage`).
-- Pour reinitialiser les donnees, vider le stockage local du navigateur.
+- Les mots de passe sont hachés avec bcrypt côté serveur ; ils ne sont jamais stockés ni transmis en clair.
+- Chaque ressource (compte, transaction, budget, objectif) est vérifiée côté serveur pour appartenir à l'utilisateur authentifié avant lecture/modification/suppression.
+- Les champs sensibles (`passwordHash`, `refreshTokenHash`) ne sont jamais renvoyés par l'API.

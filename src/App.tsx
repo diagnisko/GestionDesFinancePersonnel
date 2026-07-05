@@ -16,6 +16,9 @@ import DashboardPage from './pages/Dashboard';
 import TransactionsPage from './pages/Transactions';
 import StatisticsPage from './pages/Statistics';
 import ProfilePage from './pages/Profile';
+import SavingsGoalsPage from './pages/SavingsGoals';
+import BudgetsPage from './pages/Budgets';
+import AccountsPage from './pages/Accounts';
 
 function RequireAuth({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -81,6 +84,30 @@ function AppRoutes() {
         element={
           <RequireAuth>
             <ProfilePage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/savings-goals"
+        element={
+          <RequireAuth>
+            <SavingsGoalsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/budgets"
+        element={
+          <RequireAuth>
+            <BudgetsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/accounts"
+        element={
+          <RequireAuth>
+            <AccountsPage />
           </RequireAuth>
         }
       />

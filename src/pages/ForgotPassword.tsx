@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CheckCircle2, KeyRound } from 'lucide-react';
+import { authApi, getErrorMessage } from '../services/api';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -10,102 +12,69 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (!email.trim()) {
-      setError('Veuillez entrer votre email.');
-      return;
-    }
-
-    if (!email.includes('@')) {
-      setError('Email invalide.');
-      return;
-    }
-
+    if (!email.trim()) { setError('Veuillez entrer votre email.'); return; }
+    if (!email.includes('@')) { setError('Email invalide.'); return; }
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      await authApi.forgotPassword(email.trim());
       setSubmitted(true);
-    } catch {
-      setError('Erreur lors de la demande.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Erreur lors de la demande.'));
     } finally {
       setLoading(false);
     }
   };
 
+  const fieldClass = 'w-full px-4 py-3 rounded-lg bg-ink-850 border hairline focus:border-brass/50 outline-none text-paper placeholder:text-paper-faint transition-colors';
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0b1120] to-[#111827] flex items-center justify-center p-4">
-      <div className="w-full max-w-5xl bg-[#111827] border border-[#334155] rounded-3xl shadow-2xl overflow-hidden">
+    <div className="min-h-screen bg-ink-950 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl panel overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2">
           <div className="p-8 md:p-12">
-            <div className="mb-6 flex items-center gap-3">
-              <span className="w-10 h-10 rounded-lg bg-gradient-to-r from-[#3b82f6] to-[#2563eb] flex items-center justify-center text-white font-bold text-xl">
-                F
-              </span>
-              <div>
-                <span className="text-xl font-bold text-[#3b82f6]">FinanceFlow</span>
-                <p className="text-xs text-[#94a3b8]">Gestion des finances</p>
-              </div>
-            </div>
+            <Link to="/" className="inline-block mb-8 font-display font-semibold text-xl text-paper">
+              Finance<span className="text-gradient-brass">Flow</span>
+            </Link>
 
-            <h3 className="text-[#3b82f6] font-semibold text-sm mb-2">Récupération de compte</h3>
-            <h1 className="text-4xl font-bold text-[#f8fafc] mb-6">Mot de passe oublié</h1>
+            <h1 className="font-display text-3xl text-paper mb-1">Mot de passe oublié</h1>
 
             {submitted ? (
-              <div className="space-y-6">
-                <div className="p-4 text-[#22C55E] bg-[#14532d]/30 border border-[#22C55E]/50 rounded-lg">
-                  ✔ Instructions envoyées à <strong>{email}</strong>
+              <div className="space-y-6 mt-6">
+                <div className="p-3.5 text-gain bg-gain-soft border border-gain/30 rounded-lg text-sm flex items-start gap-2">
+                  <CheckCircle2 size={16} className="shrink-0 mt-0.5" />
+                  <span>Si un compte existe pour <strong>{email}</strong>, un lien de réinitialisation a été envoyé.</span>
                 </div>
-                <p className="text-[#cbd5e1]">Vérifiez votre boîte mail pour réinitialiser votre mot de passe.</p>
-                <Link
-                  to="/login"
-                  className="inline-block w-full bg-[#c2410c] text-white py-3 rounded-lg text-center hover:bg-[#9a3412]"
-                >
+                <p className="text-paper-dim text-sm">Vérifiez votre boîte mail pour réinitialiser votre mot de passe.</p>
+                <Link to="/login" className="inline-block w-full bg-brass text-ink-950 font-medium py-3 rounded-lg text-center hover:bg-brass/90 transition-colors">
                   Retour à la connexion
                 </Link>
               </div>
             ) : (
               <>
-                {error && (
-                  <div className="mb-6 p-4 text-[#EF4444] bg-[#7f1d1d]/30 border border-[#EF4444]/50 rounded-lg text-sm">
-                    {error}
-                  </div>
-                )}
-                <p className="text-[#cbd5e1] mb-6">Saisissez votre email et nous vous enverrons un lien de réinitialisation.</p>
+                <p className="text-sm text-paper-dim mb-6">Saisissez votre email, nous vous enverrons un lien de réinitialisation.</p>
+                {error && <div className="mb-5 p-3 text-loss bg-loss-soft border border-loss/30 rounded-lg text-sm">{error}</div>}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="exemple@domaine.com"
-                    className="w-full px-4 py-3 border border-[#334155] rounded-lg focus:ring-2 focus:ring-[#3b82f6] outline-none bg-[#0f172a] text-[#f8fafc] placeholder:text-[#94a3b8]"
-                    disabled={loading}
-                  />
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-[#c2410c] text-white py-3 rounded-lg hover:bg-[#9a3412] transition-colors"
-                  >
-                    {loading ? 'ENVOI...' : 'ENVOYER LE LIEN'}
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="exemple@domaine.com" className={fieldClass} disabled={loading} />
+                  <button type="submit" disabled={loading} className="w-full bg-brass text-ink-950 font-medium py-3 rounded-lg hover:bg-brass/90 transition-colors disabled:opacity-50">
+                    {loading ? 'Envoi…' : 'Envoyer le lien'}
                   </button>
                 </form>
 
-                <p className="text-sm text-[#cbd5e1] mt-6">
-                  <Link to="/login" className="text-[#3b82f6] hover:text-[#60a5fa]">
-                    Retour à la connexion
-                  </Link>
+                <p className="text-sm text-paper-dim mt-6">
+                  <Link to="/login" className="text-brass hover:text-brass/80">Retour à la connexion</Link>
                 </p>
               </>
             )}
           </div>
 
-          <div className="hidden md:flex p-8 md:p-12 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#334155] items-center justify-center">
-            <div className="text-center">
-              <div className="text-6xl mb-4">🔒</div>
-              <p className="text-[#f8fafc] font-medium">Récupérez rapidement l’accès à votre projet financier.</p>
-              <p className="text-[#cbd5e1] mt-2">Nous vous envoyons un lien sécurisé vers votre boîte mail.</p>
+          <div className="hidden md:flex flex-col items-center justify-center gap-4 p-10 bg-ink-850 border-l hairline text-center">
+            <div className="w-12 h-12 rounded-full bg-ink-900 border hairline flex items-center justify-center">
+              <KeyRound size={20} strokeWidth={1.5} className="text-brass" />
             </div>
+            <p className="text-sm text-paper-dim leading-relaxed max-w-xs">
+              Un lien de réinitialisation sécurisé, à durée limitée, est envoyé à l'adresse associée à votre compte.
+            </p>
           </div>
         </div>
       </div>

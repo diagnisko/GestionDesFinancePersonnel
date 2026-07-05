@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 export interface ChartCompareRow {
   month: string;
@@ -12,27 +12,34 @@ interface Props {
 
 export default function LineChartFinance({ data }: Props) {
   const chartData = data.length > 0 ? data : [{ month: '—', revenu: 0, depense: 0 }];
-
-  const tickStyle = { fill: '#d1d5db', fontSize: 11 };
+  const tickStyle = { fill: '#8a93a8', fontSize: 11, fontFamily: 'Inter' };
 
   return (
-    <div className="bg-[#111827] border border-[#334155] p-4 rounded-xl shadow min-h-[16rem] flex flex-col text-[#f8fafc]">
-      <h2 className="font-bold mb-2 shrink-0">Revenus vs dépenses</h2>
-
-      <div className="flex-1 min-h-[12rem] w-full">
+    <div className="panel p-5 min-h-[18rem] flex flex-col">
+      <h2 className="font-display text-base text-paper mb-4 shrink-0">Évolution mensuelle</h2>
+      <div className="flex-1 min-h-[13rem] w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-            <XAxis dataKey="month" tick={tickStyle} />
-            <YAxis tick={tickStyle} tickFormatter={(v) => `${Number(v) / 1000}k`} />
+          <AreaChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+            <defs>
+              <linearGradient id="gainFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3ecf8e" stopOpacity={0.35} />
+                <stop offset="100%" stopColor="#3ecf8e" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="lossFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ff6b57" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#ff6b57" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid stroke="#171c2a" vertical={false} />
+            <XAxis dataKey="month" tick={tickStyle} axisLine={{ stroke: '#232a3a' }} tickLine={false} />
+            <YAxis tick={tickStyle} tickFormatter={(v) => `${Number(v) / 1000}k`} axisLine={false} tickLine={false} />
             <Tooltip
-              contentStyle={{ color: '#f8fafc', backgroundColor: '#1e293b', border: '1px solid #334155' }}
-              formatter={(value) =>
-                typeof value === 'number' ? value.toLocaleString('fr-FR') : String(value ?? '')
-              }
+              contentStyle={{ color: '#edeff3', backgroundColor: '#141926', border: '1px solid #232a3a', borderRadius: 10, fontSize: 12 }}
+              formatter={(value) => (typeof value === 'number' ? value.toLocaleString('fr-FR') : String(value ?? ''))}
             />
-            <Line type="monotone" dataKey="revenu" stroke="#22C55E" strokeWidth={2} dot />
-            <Line type="monotone" dataKey="depense" stroke="#EF4444" strokeWidth={2} dot />
-          </LineChart>
+            <Area type="monotone" dataKey="revenu" name="Revenus" stroke="#3ecf8e" strokeWidth={2} fill="url(#gainFill)" />
+            <Area type="monotone" dataKey="depense" name="Dépenses" stroke="#ff6b57" strokeWidth={2} fill="url(#lossFill)" />
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>

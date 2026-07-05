@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme
+      MYSQL_DATABASE: financeflow_db
+    ports:
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+
+  redis:
+    image: redis:7
+    ports:
+      - '6379:6379'
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASS=changeme
+      - DB_NAME=financeflow_db
+      - TYPEORM_SYNC=true
+      - JWT_SECRET=change_this_secret
+      - CORS_ORIGIN=http://localhost:5173
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  db_data:
