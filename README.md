@@ -10,7 +10,6 @@ Ce dépôt contient deux projets distincts :
 .
 ├── src/            # Frontend React 19 + Vite + TypeScript + Tailwind
 ├── backend/         # Backend NestJS + TypeORM + MySQL
-└── .github/workflows/deploy-github-pages.yml   # CI/CD du frontend
 ```
 
 Le frontend et le backend sont deux applications séparées qui communiquent via une API REST (préfixe `/api`). Le frontend **ne fonctionne pas seul** : il a besoin du backend pour l'authentification et toutes les données (comptes, transactions, budgets, objectifs).
@@ -38,9 +37,9 @@ npm run dev             # http://localhost:5173
 
 ## Déploiement en production
 
-Le frontend est déployé sur GitHub Pages via `.github/workflows/deploy-github-pages.yml`.
+Le frontend et le backend doivent être déployés séparément selon votre hébergeur choisi (Render, Railway, VPS, etc.).
 
-**Important** : ce workflow a besoin de la variable de dépôt `VITE_API_URL` (Settings → Secrets and variables → Actions → Variables) pointant vers l'URL publique de votre backend déployé (Render, Railway, VPS…). Sans elle, le build échoue volontairement plutôt que de déployer un site qui ne pourrait pas contacter l'API.
+Le frontend doit être configuré avec une variable d'environnement `VITE_API_URL` pointant vers l'URL publique de votre backend déployé. Sans cette valeur, l'application ne pourra pas contacter l'API depuis la version déployée.
 
 Le backend n'est pas déployé automatiquement par ce dépôt : il doit être hébergé séparément (voir `backend/Dockerfile`).
 
