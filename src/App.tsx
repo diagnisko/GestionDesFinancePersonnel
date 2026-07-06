@@ -6,6 +6,8 @@ import {
   Navigate,
   useLocation,
 } from 'react-router-dom';
+
+const BASENAME = import.meta.env.PROD ? '/GestionDesFinancePersonnel' : '';
 import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './hooks/useAuth';
 import LandingPage from './components/landing/LandingPage';
@@ -25,7 +27,7 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to={`${BASENAME}/login`} state={{ from: location }} replace />;
   }
 
   return children;
@@ -34,7 +36,7 @@ function RequireAuth({ children }: { children: React.ReactNode }) {
 function AuthRedirect({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to={`${BASENAME}/dashboard`} replace />;
   }
   return children;
 }
@@ -111,7 +113,7 @@ function AppRoutes() {
           </RequireAuth>
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to={`${BASENAME}/`} replace />} />
     </Routes>
   );
 }
@@ -119,7 +121,7 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename={BASENAME}>
         <AppRoutes />
       </Router>
     </AuthProvider>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { LineChart, Tags, AlertTriangle, Target, PieChart, Landmark, ArrowRight } from "lucide-react";
 
 const features = [
@@ -49,10 +50,10 @@ const Features = () => {
             <h3 className="font-display font-semibold text-xl text-paper mb-1">Prêt à transformer vos finances ?</h3>
             <p className="text-paper-dim text-sm">Créez votre compte et ajoutez votre première transaction en moins de deux minutes.</p>
           </div>
-          <a href="/register" className="shrink-0 inline-flex items-center gap-2 bg-brass text-ink-950 font-medium px-6 py-3 rounded-xl text-sm hover:bg-brass/90 transition-all duration-200 hover:-translate-y-0.5">
+          <Link to="/register" className="shrink-0 inline-flex items-center gap-2 bg-brass text-ink-950 font-medium px-6 py-3 rounded-xl text-sm hover:bg-brass/90 transition-all duration-200 hover:-translate-y-0.5">
             Démarrer maintenant — c'est gratuit
             <ArrowRight size={14} />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

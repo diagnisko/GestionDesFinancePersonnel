@@ -35,7 +35,7 @@ api.interceptors.response.use(
         } catch {
           localStorage.removeItem('financeflow-token');
           localStorage.removeItem('financeflow-refresh');
-          window.location.href = '/login';
+          window.location.href = `${import.meta.env.PROD ? '/GestionDesFinancePersonnel' : ''}/login`;
         }
       }
     }
